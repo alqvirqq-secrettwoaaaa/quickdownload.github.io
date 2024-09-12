@@ -38,6 +38,11 @@
                 event.preventDefault();
 
                 var videoId = $('.youtube_video_id').val();
+                if (!videoId) {
+                    $('.youtube_video').html('<p>Please enter a video ID.</p>');
+                    return;
+                }
+
                 var ajaxUrl = 'http://localhost/?id=' + videoId;
 
                 $.get(ajaxUrl, function(data) {
@@ -59,6 +64,8 @@
                     } else {
                         $('.youtube_video').html('<p>Error retrieving video data.</p>');
                     }
+                }).fail(function() {
+                    $('.youtube_video').html('<p>Error connecting to the server.</p>');
                 });
             });
         });
