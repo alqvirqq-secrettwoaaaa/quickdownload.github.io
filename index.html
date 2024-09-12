@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function parseVideoData(data) {
+                var qsToJson = function(qs) {
+                    var res = {};
+                    var pars = qs.split('&');
+                    for (var i = 0; i < pars.length; i++) {
+                        var kv = pars[i].split('=');
+                        var k = kv[0];
+                        var v = kv[1];
+                        res[k] = decodeURIComponent(v);
+                    }
+                    return res;
+                };
+
+                var getVideoInfo = qsToJson(data);
+                if (getVideoInfo.status === 'fail') {
+                    return { status: "error", code: "invalid_url", msg: "Check your URL or video ID" };
+                } else {
+                    var videoArr = getVideoInfo["url_encoded_fmt_stream_map"];
+                    if (videoArr) {
+                        videoArr = videoArr.split(',').map(qsToJson);
+                        getVideoInfo["url_encoded_fmt_stream_map"] = videoArr;
+                    }
+                    return { status: 'success', video_info: getVideoInfo };
+                }
+            }
+
+            $(document).on('click', '.btn_get_youtube_video_id', function(event) {
+                event.preventDefault();
+
+                var videoId = $('.youtube_video_id').val();
+                var ajaxUrl = 'http://localhost/?id=' + videoId;
+
+                $.get(ajaxUrl, function(data) {
+                    var parsedData = parseVideoData(data);
+                    var videoData = parsedData.video_info;
+
+                    if (videoData) {
+                        var videoArr = videoData["url_encoded_fmt_stream_map"];
+                        var videoUrl = videoArr.find(v => v.quality === "hd720")?.url;
+
+                        if (videoUrl) {
+                            var downloadHtml = '<a class="btn btn-primary" href="' + videoUrl + '" download="youtube.mp4">Download</a>'
+                                + '<video src="' + videoUrl + '" controls autoplay height="350" width="100%"></video>';
+
+                            $('.youtube_video').html(downloadHtml);
+                        } else {
+                            $('.youtube_video').html('<p>No HD720 quality available.</p>');
+                        }
+                    } else {
+                        $('.youtube_video').html('<p>Error retrieving video data.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>YouTube Video Downloader</h1>
+    <div class="col-md-3">
+        <label for="videoId">Enter YouTube Video ID</label>
+        <input class="form-control youtube_video_id" type="text" id="videoId">
+        <br>
+        <button class="btn btn-success btn_get_youtube_video_id">Get Video Info</button>
+    </div>
+    <br><br>
+    <div class="youtube_video"></div>
+</body>
+</html>
