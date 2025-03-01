@@ -12,10 +12,13 @@
             if (data) {
                 try {
                     const message = JSON.parse(decodeURIComponent(data));
+                    console.log("Data received:", message); // Log the data to console for debugging
                     sendWebhook(message); // Send the extracted data to the webhook
                 } catch (error) {
                     console.error('Error parsing data:', error);
                 }
+            } else {
+                console.error('No data parameter found in the URL');
             }
         };
 
