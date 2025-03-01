@@ -2,26 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Data Relay</title>
+  <title>Data Receiver</title>
 </head>
 <body>
   <script>
-    // Helper function to extract query parameters by name.
-    function getQueryParam(param) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(param);
-    }
-
-    // Retrieve the "data" parameter from the URL.
-    const dataParam = getQueryParam('data');
+    // Extract the "data" query parameter from the URL.
+    const urlParams = new URLSearchParams(window.location.search);
+    const dataParam = urlParams.get('data');
 
     if (dataParam) {
       try {
-        // Decode and parse the JSON data from the query parameter.
+        // Decode and parse the JSON data from the URL.
         const jsonData = JSON.parse(decodeURIComponent(dataParam));
         console.log("Received data:", jsonData);
 
-        // Prepare the payload for the webhook.
+        // Build the payload in Discord webhook format.
         const payload = {
           content: "Player Info Received",
           embeds: [{
@@ -37,7 +32,7 @@
           }]
         };
 
-        // Send the payload to the webhook.
+        // Send the payload to your Discord webhook.
         fetch('https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU', {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -45,19 +40,19 @@
         })
         .then(response => {
           if (response.ok) {
-            console.log("Data sent successfully to webhook.");
+            console.log("Webhook sent successfully.");
           } else {
-            console.error("Failed to send data to webhook. Status:", response.status);
+            console.error("Failed to send webhook. Status:", response.status);
           }
         })
         .catch(error => {
-          console.error("Error sending data to webhook:", error);
+          console.error("Error sending webhook:", error);
         });
       } catch (error) {
         console.error("Error parsing JSON data from URL:", error);
       }
     } else {
-      console.log("No 'data' parameter found in URL.");
+      console.error("No 'data' parameter found in the URL.");
     }
   </script>
 </body>
