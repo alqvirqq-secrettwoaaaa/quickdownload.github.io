@@ -3,37 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nex Emulation</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        textarea { width: 90%; height: 200px; margin-bottom: 10px; }
-        button { padding: 10px 20px; margin: 5px; font-size: 16px; }
-    </style>
+    <title></title>
 </head>
 <body>
-    <h1>Nex Emulation</h1>
-    <textarea id="code" placeholder="Enter your script here..."></textarea><br>
-    <button onclick="sendCode()">Execute</button>
-    <button onclick="clearCode()">Clear</button>
-    <p id="status"></p>
+    <h1></h1>
+    <p></p>
 
     <script>
-        async function sendCode() {
-            let code = document.getElementById("code").value;
-            if (!code.trim()) return alert("Enter a script first!");
+        if (window.location.pathname == "/fire") {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/fire", true);
+            xhr.setRequestHeader("Content-Type", "text/plain");
 
-            localStorage.setItem("latestCode", code);
-            document.getElementById("status").innerText = "Code saved.";
-        }
-
-        function clearCode() {
-            document.getElementById("code").value = "";
-            localStorage.removeItem("latestCode");
-            document.getElementById("status").innerText = "Cleared.";
-        }
-
-        function getCode() {
-            return localStorage.getItem("latestCode") || "";
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    console.log(xhr.responseText);
+                }
+            };
         }
     </script>
 </body>
